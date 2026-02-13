@@ -22,11 +22,20 @@
         .font-cursive { font-family: 'Dancing Script', cursive; }
         .font-serif { font-family: 'Playfair Display', serif; }
         
+        /* Fixed iPhone Background Fix */
         .hero-gradient {
             background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.6)), url('https://i.ibb.co/gb0pZPKz/IMG-0383.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* Specifically target iPhones/Touch devices where 'fixed' causes bugs */
+        @media (hover: none) and (pointer: coarse) {
+            .hero-gradient {
+                background-attachment: scroll;
+            }
         }
 
         @keyframes heartbeat {
@@ -89,8 +98,8 @@
     <section class="py-24 px-6 overflow-hidden">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="text-5xl font-cursive text-rose-600 mb-4">Why I'm Obsessed With You...</h2>
-                <p class="text-gray-500 italic">By Praise Osagie Ujiadughele</p>
+                <h2 class="text-5xl font-cursive text-rose-600 mb-4 text-center">Why I'm Obsessed With You...</h2>
+                <p class="text-gray-500 italic text-center">By Praise Osagie Ujiadughele</p>
             </div>
             
             <div class="grid md:grid-cols-2 gap-8">
@@ -157,7 +166,7 @@
         </div>
     </section>
 
-    <!-- Anniversary -->
+    <!-- Anniversary Counter -->
     <section class="py-24 bg-rose-600 text-white text-center">
         <h2 class="text-4xl font-serif mb-12">The Clock of Us</h2>
         <div class="flex flex-wrap justify-center gap-4 md:gap-8">
@@ -166,7 +175,7 @@
             <div class="glass-card bg-white/20 p-6 w-28 md:w-44"><div id="minutes" class="text-4xl md:text-6xl font-bold">00</div><div class="text-xs uppercase mt-2">Minutes</div></div>
             <div class="glass-card bg-white/20 p-6 w-28 md:w-44"><div id="seconds" class="text-4xl md:text-6xl font-bold">00</div><div class="text-xs uppercase mt-2">Seconds</div></div>
         </div>
-        <p class="mt-12 text-2xl font-cursive italic">Until we celebrate 2 years on May 24th!</p>
+        <p class="mt-12 text-2xl font-cursive italic px-4">Until we celebrate 2 years on May 24th!</p>
     </section>
 
     <!-- Surprise & Spotify Music -->
@@ -204,16 +213,18 @@
         <div class="mb-10 text-rose-500"><i class="fas fa-heart text-5xl animate-bounce"></i></div>
         <h3 class="text-3xl font-serif text-gray-800 mb-2">Toyin & Praiz</h3>
         <p class="text-gray-400 text-sm mb-12 tracking-widest uppercase">OOU Origins • Forever Bond</p>
-        <div class="font-cursive text-5xl text-rose-600">I am obsessed with you.</div>
+        <div class="font-cursive text-5xl text-rose-600 px-4 leading-tight">I am obsessed with you.</div>
     </footer>
 
     <script>
         function spawnHearts(e) {
+            const x = e.clientX || window.innerWidth / 2;
+            const y = e.clientY || window.innerHeight / 2;
             for(let i=0; i<5; i++) {
                 const heart = document.createElement('i');
                 heart.className = 'fas fa-heart floating-heart text-rose-500';
-                heart.style.left = (e.clientX + (Math.random() - 0.5) * 50) + 'px';
-                heart.style.top = (e.clientY + (Math.random() - 0.5) * 50) + 'px';
+                heart.style.left = (x + (Math.random() - 0.5) * 50) + 'px';
+                heart.style.top = (y + (Math.random() - 0.5) * 50) + 'px';
                 heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
                 heart.style.color = `hsl(${Math.random() * 20 + 340}, 100%, 70%)`;
                 document.body.appendChild(heart);
@@ -225,10 +236,12 @@
         function updateClock() {
             const now = new Date().getTime();
             const diff = anniversary - now;
-            document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-            document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-            document.getElementById('minutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-            document.getElementById('seconds').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+            if (diff > 0) {
+                document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                document.getElementById('minutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                document.getElementById('seconds').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+            }
         }
         setInterval(updateClock, 1000);
         updateClock();
